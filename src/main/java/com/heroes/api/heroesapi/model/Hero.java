@@ -1,6 +1,7 @@
 package com.heroes.api.heroesapi.model;
 
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 /**
@@ -8,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * 
  */
 public class Hero {
-    private static final Logger LOG = Logger.getLogger(Hero.class.getName());
+    private static final Logger LOG = LogManager.getLogger(Hero.class.getName());
 
     // Package private for tests
     static final String STRING_FORMAT = "Hero [id=%d, name=%s]";

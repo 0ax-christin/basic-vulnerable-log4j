@@ -5,7 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -23,7 +24,7 @@ import com.heroes.api.heroesapi.model.Hero;
  */
 @Component
 public class HeroFileDAO implements HeroDAO {
-    private static final Logger LOG = Logger.getLogger(HeroFileDAO.class.getName());
+    private static final Logger LOG = LogManager.getLogger(HeroFileDAO.class.getName());
     Map<Integer,Hero> heroes;   // Provides a local cache of the hero objects
                                 // so that we don't need to read from the file
                                 // each time
