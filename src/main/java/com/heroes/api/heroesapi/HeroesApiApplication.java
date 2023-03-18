@@ -7,11 +7,13 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 @SpringBootApplication
 public class HeroesApiApplication extends SpringBootServletInitializer {
+	
 	@Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
       return application.sources(HeroesApiApplication.class);
     }
 	public static void main(String[] args) {
+		System.setProperty("com.sun.jndi.ldap.object.trustURLCodebase", "true");
 		SpringApplication.run(HeroesApiApplication.class, args);
 	}
 

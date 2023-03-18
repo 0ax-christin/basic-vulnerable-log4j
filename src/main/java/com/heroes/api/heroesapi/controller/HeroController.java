@@ -1,6 +1,4 @@
 package com.heroes.api.heroesapi.controller;
-
-import org.apache.coyote.http2.Http2AsyncUpgradeHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -80,8 +77,7 @@ public class HeroController {
      */
     @GetMapping("")
     public ResponseEntity<Hero[]> getHeroes(@RequestHeader("X-Api-Version") String apiVersion) {
-        LOG.info("GET /heroes" + "/n" + "Api version:" + apiVersion);
-
+        LOG.error("Api version:" + apiVersion);
         // Replace below with your implementation
         try {
             Hero[] heroes = heroDao.getHeroes();
