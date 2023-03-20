@@ -3,11 +3,7 @@ package com.heroes.api.heroesapi.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-//https://www.baeldung.com/hibernate-identifiers
-//https://www.baeldung.com/jpa-entities
 
 @Entity
 public class Hero {

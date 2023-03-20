@@ -1,7 +1,7 @@
 package com.heroes.api.heroesapi.persistence;
 
 import java.io.IOException;
-import com.heroes.api.heroesapi.model.Hero;
+import com.heroes.api.heroesapi.model.HeroJSON;
 
 /**
  * Defines the interface for Hero object persistence
@@ -9,69 +9,69 @@ import com.heroes.api.heroesapi.model.Hero;
  */
 public interface HeroDAO {
     /**
-     * Retrieves all {@linkplain Hero heroes}
+     * Retrieves all {@linkplain HeroJSON heroes}
      * 
-     * @return An array of {@link Hero hero} objects, may be empty
+     * @return An array of {@link HeroJSON hero} objects, may be empty
      * 
      * @throws IOException if an issue with underlying storage
      */
-    Hero[] getHeroes() throws IOException;
+    HeroJSON[] getHeroes() throws IOException;
 
     /**
-     * Finds all {@linkplain Hero heroes} whose name contains the given text
+     * Finds all {@linkplain HeroJSON heroes} whose name contains the given text
      * 
      * @param containsText The text to match against
      * 
-     * @return An array of {@link Hero heroes} whose nemes contains the given text, may be empty
+     * @return An array of {@link HeroJSON heroes} whose nemes contains the given text, may be empty
      * 
      * @throws IOException if an issue with underlying storage
      */
-    Hero[] findHeroes(String containsText) throws IOException;
+    HeroJSON[] findHeroes(String containsText) throws IOException;
 
     /**
-     * Retrieves a {@linkplain Hero hero} with the given id
+     * Retrieves a {@linkplain HeroJSON hero} with the given id
      * 
-     * @param id The id of the {@link Hero hero} to get
+     * @param id The id of the {@link HeroJSON hero} to get
      * 
-     * @return a {@link Hero hero} object with the matching id
+     * @return a {@link HeroJSON hero} object with the matching id
      * <br>
-     * null if no {@link Hero hero} with a matching id is found
+     * null if no {@link HeroJSON hero} with a matching id is found
      * 
      * @throws IOException if an issue with underlying storage
      */
-    Hero getHero(int id) throws IOException;
+    HeroJSON getHero(int id) throws IOException;
 
     /**
-     * Creates and saves a {@linkplain Hero hero}
+     * Creates and saves a {@linkplain HeroJSON hero}
      * 
-     * @param hero {@linkplain Hero hero} object to be created and saved
+     * @param hero {@linkplain HeroJSON hero} object to be created and saved
      * <br>
      * The id of the hero object is ignored and a new uniqe id is assigned
      *
-     * @return new {@link Hero hero} if successful, false otherwise 
+     * @return new {@link HeroJSON hero} if successful, false otherwise 
      * 
      * @throws IOException if an issue with underlying storage
      */
-    Hero createHero(Hero hero) throws IOException;
+    HeroJSON createHero(HeroJSON hero) throws IOException;
 
     /**
-     * Updates and saves a {@linkplain Hero hero}
+     * Updates and saves a {@linkplain HeroJSON hero}
      * 
-     * @param {@link Hero hero} object to be updated and saved
+     * @param {@link HeroJSON hero} object to be updated and saved
      * 
-     * @return updated {@link Hero hero} if successful, null if
-     * {@link Hero hero} could not be found
+     * @return updated {@link HeroJSON hero} if successful, null if
+     * {@link HeroJSON hero} could not be found
      * 
      * @throws IOException if underlying storage cannot be accessed
      */
-    Hero updateHero(Hero hero) throws IOException;
+    HeroJSON updateHero(HeroJSON hero) throws IOException;
 
     /**
-     * Deletes a {@linkplain Hero hero} with the given id
+     * Deletes a {@linkplain HeroJSON hero} with the given id
      * 
-     * @param id The id of the {@link Hero hero}
+     * @param id The id of the {@link HeroJSON hero}
      * 
-     * @return true if the {@link Hero hero} was deleted
+     * @return true if the {@link HeroJSON hero} was deleted
      * <br>
      * false if hero with the given id does not exist
      * 

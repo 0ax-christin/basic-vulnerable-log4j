@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.heroes.api.heroesapi.model.Hero;
+import com.heroes.api.heroesapi.model.HeroJSON;
 
 /**
  * Implements the functionality for JSON file-based peristance for Heroes
@@ -25,7 +25,7 @@ import com.heroes.api.heroesapi.model.Hero;
 @Component
 public class HeroFileDAO implements HeroDAO {
     private static final Logger LOG = LogManager.getLogger(HeroFileDAO.class.getName());
-    Map<Integer,Hero> heroes;   // Provides a local cache of the hero objects
+    Map<Integer,HeroJSON> heroes;   // Provides a local cache of the hero objects
                                 // so that we don't need to read from the file
                                 // each time
     private ObjectMapper objectMapper;  // Provides conversion between Hero
@@ -49,7 +49,7 @@ public class HeroFileDAO implements HeroDAO {
     }
 
     /**
-     * Generates the next id for a new {@linkplain Hero hero}
+     * Generates the next id for a new {@linkplain HeroJSON hero}
      * 
      * @return The next id
      */
@@ -60,46 +60,46 @@ public class HeroFileDAO implements HeroDAO {
     }
 
     /**
-     * Generates an array of {@linkplain Hero heroes} from the tree map
+     * Generates an array of {@linkplain HeroJSON heroes} from the tree map
      * 
-     * @return  The array of {@link Hero heroes}, may be empty
+     * @return  The array of {@link HeroJSON heroes}, may be empty
      */
-    private Hero[] getHeroesArray() {
+    private HeroJSON[] getHeroesArray() {
         return getHeroesArray(null);
     }
 
     /**
-     * Generates an array of {@linkplain Hero heroes} from the tree map for any
-     * {@linkplain Hero heroes} that contains the text specified by containsText
+     * Generates an array of {@linkplain HeroJSON heroes} from the tree map for any
+     * {@linkplain HeroJSON heroes} that contains the text specified by containsText
      * <br>
-     * If containsText is null, the array contains all of the {@linkplain Hero heroes}
+     * If containsText is null, the array contains all of the {@linkplain HeroJSON heroes}
      * in the tree map
      * 
-     * @return  The array of {@link Hero heroes}, may be empty
+     * @return  The array of {@link HeroJSON heroes}, may be empty
      */
-    private Hero[] getHeroesArray(String containsText) { // if containsText == null, no filter
-        ArrayList<Hero> heroArrayList = new ArrayList<>();
+    private HeroJSON[] getHeroesArray(String containsText) { // if containsText == null, no filter
+        ArrayList<HeroJSON> heroArrayList = new ArrayList<>();
 
-        for (Hero hero : heroes.values()) {
+        for (HeroJSON hero : heroes.values()) {
             if (containsText == null || hero.getName().contains(containsText)) {
                 heroArrayList.add(hero);
             }
         }
 
-        Hero[] heroArray = new Hero[heroArrayList.size()];
+        HeroJSON[] heroArray = new HeroJSON[heroArrayList.size()];
         heroArrayList.toArray(heroArray);
         return heroArray;
     }
 
     /**
-     * Saves the {@linkplain Hero heroes} from the map into the file as an array of JSON objects
+     * Saves the {@linkplain HeroJSON heroes} from the map into the file as an array of JSON objects
      * 
-     * @return true if the {@link Hero heroes} were written successfully
+     * @return true if the {@link HeroJSON heroes} were written successfully
      * 
      * @throws IOException when file cannot be accessed or written to
      */
     private boolean save() throws IOException {
-        Hero[] heroArray = getHeroesArray();
+        HeroJSON[] heroArray = getHeroesArray();
 
         // Serializes the Java Objects to JSON objects into the file
         // writeValue will thrown an IOException if there is an issue
@@ -109,7 +109,7 @@ public class HeroFileDAO implements HeroDAO {
     }
 
     /**
-     * Loads {@linkplain Hero heroes} from the JSON file into the map
+     * Loads {@linkplain HeroJSON heroes} from the JSON file into the map
      * <br>
      * Also sets next id to one more than the greatest id found in the file
      * 
@@ -124,10 +124,10 @@ public class HeroFileDAO implements HeroDAO {
         // Deserializes the JSON objects from the file into an array of heroes
         // readValue will throw an IOException if there's an issue with the file
         // or reading from the file
-        Hero[] heroArray = objectMapper.readValue(new File(filename),Hero[].class);
+        HeroJSON[] heroArray = objectMapper.readValue(new File(filename),HeroJSON[].class);
 
         // Add each hero to the tree map and keep track of the greatest id
-        for (Hero hero : heroArray) {
+        for (HeroJSON hero : heroArray) {
             heroes.put(hero.getId(),hero);
             if (hero.getId() > nextId)
                 nextId = hero.getId();
@@ -141,7 +141,7 @@ public class HeroFileDAO implements HeroDAO {
     ** {@inheritDoc}
      */
     @Override
-    public Hero[] getHeroes() {
+    public HeroJSON[] getHeroes() {
         synchronized(heroes) {
             return getHeroesArray();
         }
@@ -151,7 +151,7 @@ public class HeroFileDAO implements HeroDAO {
     ** {@inheritDoc}
      */
     @Override
-    public Hero[] findHeroes(String containsText) {
+    public HeroJSON[] findHeroes(String containsText) {
         synchronized(heroes) {
             return getHeroesArray(containsText);
         }
@@ -161,7 +161,7 @@ public class HeroFileDAO implements HeroDAO {
     ** {@inheritDoc}
      */
     @Override
-    public Hero getHero(int id) {
+    public HeroJSON getHero(int id) {
         synchronized(heroes) {
             if (heroes.containsKey(id))
                 return heroes.get(id);
@@ -174,11 +174,11 @@ public class HeroFileDAO implements HeroDAO {
     ** {@inheritDoc}
      */
     @Override
-    public Hero createHero(Hero hero) throws IOException {
+    public HeroJSON createHero(HeroJSON hero) throws IOException {
         synchronized(heroes) {
             // We create a new hero object because the id field is immutable
             // and we need to assign the next unique id
-            Hero newHero = new Hero(nextId(),hero.getName());
+            HeroJSON newHero = new HeroJSON(nextId(),hero.getName());
             heroes.put(newHero.getId(),newHero);
             save(); // may throw an IOException
             return newHero;
@@ -189,7 +189,7 @@ public class HeroFileDAO implements HeroDAO {
     ** {@inheritDoc}
      */
     @Override
-    public Hero updateHero(Hero hero) throws IOException {
+    public HeroJSON updateHero(HeroJSON hero) throws IOException {
         synchronized(heroes) {
             if (heroes.containsKey(hero.getId()) == false)
                 return null;  // hero does not exist

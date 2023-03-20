@@ -1,4 +1,5 @@
 package com.heroes.api.heroesapi.controller;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,10 +14,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.heroes.api.heroesapi.persistence.HeroDAO;
+import com.heroes.api.heroesapi.service.HeroService;
+import com.heroes.api.heroesapi.model.Hero;
 import com.heroes.api.heroesapi.model.HeroJSON;
 
 /**
@@ -30,6 +35,10 @@ import com.heroes.api.heroesapi.model.HeroJSON;
 @RestController
 @RequestMapping("heroes")
 public class HeroController {
+    
+    @Autowired
+    private HeroService heroService;
+    
     private static final Logger LOG = LogManager.getLogger(HeroController.class.getName());
     private HeroDAO heroDao;
 
@@ -54,18 +63,13 @@ public class HeroController {
      * ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
      */
     @GetMapping("/{id}")
-    public ResponseEntity<HeroJSON> getHero(@PathVariable int id) {
+    public ResponseEntity<Hero> getHero(@PathVariable Integer id) {
         LOG.info("GET /heroes/" + id);
-        try {
-            HeroJSON hero = heroDao.getHero(id);
-            if (hero != null)
-                return new ResponseEntity<HeroJSON>(hero,HttpStatus.OK);
-            else
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        catch(IOException e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        Hero hero = heroService.getHeroById(id);
+        if (hero != null)
+            return new ResponseEntity<Hero>(hero,HttpStatus.OK);
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -76,18 +80,11 @@ public class HeroController {
      * ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
      */
     @GetMapping("")
-    public ResponseEntity<HeroJSON[]> getHeroes(@RequestHeader("X-Api-Version") String apiVersion) {
+    public List<Hero> getHeroes(@RequestHeader("X-Api-Version") String apiVersion) {
         LOG.error("Api version:" + apiVersion);
         // Replace below with your implementation
-        try {
-            HeroJSON[] heroes = heroDao.getHeroes();
-            if(heroes.length != 0)
-                return new ResponseEntity<HeroJSON[]>(heroes,HttpStatus.OK);
-        }
-        catch(IOException e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return null;
+        List<Hero> heroes = heroService.fetchAllHeroes();
+        return heroes;
     }
 
     /**
@@ -129,30 +126,24 @@ public class HeroController {
      * ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
      */
     @PostMapping("")
-    public ResponseEntity<HeroJSON> createHero(@RequestBody HeroJSON hero) {
+    public ResponseEntity<Hero> createHero(@RequestBody Hero hero) throws IOException {
         LOG.info("POST /heroes " + hero);
 
-        // Replace below with your implementation
-        try{
-            HeroJSON[] heroes = heroDao.getHeroes();
-            int duplicate = 0;
-            //Added functionality to check if user sends duplicate name and give status of CONFLICT if name already exists as per above documentation
-            for(int i=0; i< heroes.length; i++) {
-                HeroJSON heroListItem = heroes[i];
-                if((hero.getName().contains(heroListItem.getName()) || (hero.getId() == heroListItem.getId())) == true) 
-                    duplicate = 1;
-            }
-            
-            if(duplicate == 0) {
-                HeroJSON heroRep = heroDao.createHero(hero);
-                if(heroRep != null)
-                    return new ResponseEntity<HeroJSON>(heroRep, HttpStatus.CREATED);
-            } else 
-                return new ResponseEntity<>(HttpStatus.CONFLICT);
+        List<Hero> heroes = heroService.fetchAllHeroes();
+        int duplicate = 0;
+        //Added functionality to check if user sends duplicate name and give status of CONFLICT if name already exists as per above documentation
+        for(int i=0; i< heroes.size(); i++) {
+            Hero heroListItem = heroes.get(i);
+            if((hero.getName().contains(heroListItem.getName()) || (hero.getId() == heroListItem.getId())) == true) 
+                duplicate = 1;
         }
-        catch(IOException e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        
+        if(duplicate == 0) {
+            Hero heroRep = heroService.saveHero(hero);
+            if(heroRep != null)
+                return new ResponseEntity<Hero>(heroRep, HttpStatus.CREATED);
+        } else 
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         return null;
     }
 
