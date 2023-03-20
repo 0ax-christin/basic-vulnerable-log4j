@@ -1,5 +1,34 @@
 # basic-vulnerable-log4j
 
+## Setting up SQL 
+Note: For whatever reason, this current project when attempting to deploy on Tomcat gives an error saying it cannot find heroes.json, not really sure where to keep it, but decided might as well connect to a legit database and try that out eh?
+
+References: 
+https://spring.io/guides/gs/accessing-data-mysql/
+https://javarevisited.blogspot.com/2022/03/spring-boot-mysql-database-example-crud.html
+https://www.geeksforgeeks.org/spring-boot-crud-operations-using-mysql-database/
+https://deeppatel23.medium.com/crud-operations-in-spring-boot-and-mysql-rest-apis-9ca0c15bdc73
+
+Install SQL and setup SQL on machine:
+
+`sudo apt update`
+`sudo apt install mysql-server`
+`sudo systemctl start mysql.service`
+
+`sudo mysql`
+spring: springsprong
+In SPring boot:
+Under `src/main/resources/application.properties`
+Add:
+```
+spring.jpa.hibernate.ddl-auto=update
+spring.datasource.url=jdbc:mysql://${MYSQL_HOST:localhost}:3306/db_example
+spring.datasource.username=springuser
+spring.datasource.password=ThePassword
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+#spring.jpa.show-sql: true
+```
+
 ## Setup of Vulnerable Java 8
 To acquire older java versions you can go to: https://repo.huaweicloud.com/java/jdk/
 This gives a directory listing titled "Index of java-local/jdk"
@@ -101,6 +130,18 @@ Comment entry
 
 Web Application Manager: http://127.0.0.1:8080/manager/html
 Tomcat Virtual Host Manager: http:/127.0.0.1:8080/host-manager/html
+
+## Deploying this repo
+`git clone` repository
+`sudo apt install maven`
+`mvn clean package` - Generate WAR file
+
+Go to Tomcat Web application manager
+Under the section WAR file to deploy
+Select WAR file from directory and click DEPLOY
+If successful, an entry of the application will appear under Applications section
+In my case `/heroes-api-0.0.1-SNAPSHOT`, Click start to make it available
+Then navigate to: http:/127.0.0.1:8080/heroes-api-0.0.1-SNAPSHOT
 
 
 exploit test:
