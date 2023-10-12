@@ -8,14 +8,14 @@ import lombok.NoArgsConstructor;
 public class Product {
     private int ProductID;
     private String ProductName;
-    private float Price;
-    private int Stock;
+    private String Price;
+    private String Stock;
 
     public Product(int productID, String productName, float price, int stock) {
         this.ProductID = productID;
         this.ProductName = productName;
-        this.Price = price;
-        this.Stock = stock;
+        this.Price = Float.toString(price);
+        this.Stock = Integer.toString(stock);
     }
 
     public void setProductID(int productID) {
@@ -31,15 +31,15 @@ public class Product {
         return this.ProductName;
     }
     public void setPrice(float price) {
-        this.Price = price;
+        this.Price = Float.toString(price);
     }
-    public float getPrice() {
+    public String getPrice() {
         return this.Price;
     }
     public void setStock(int stock) {
-        this.Stock = stock;
+        this.Stock = Integer.toString(stock);
     }
-    public int getStock() {
+    public String getStock() {
         return this.Stock;
     }
 }

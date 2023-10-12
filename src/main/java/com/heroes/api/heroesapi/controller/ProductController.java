@@ -21,7 +21,6 @@ import org.apache.logging.log4j.Logger;
 import com.heroes.api.heroesapi.persistence.ProductDAO;
 
 @RestController
-@RequestMapping("products")
 @EnableTransactionManagement
 public class ProductController {
     private static final Logger LOG = LogManager.getLogger(HeroController.class.getName());
@@ -29,19 +28,19 @@ public class ProductController {
     @Autowired
     private ProductDAO productDAO;
 
-    @GetMapping("")
+    @GetMapping("/products")
     public ResponseEntity<List<Product>> getProducts() {
-        List<Product> products = productDAO.getAllProducts();
+        List<Product> products = productDAO.getProducts();
         return new ResponseEntity<List<Product>>(products,HttpStatus.OK);
     }
 
-    @RequestMapping(value="/{id}", method=RequestMethod.GET)
-    public ResponseEntity<Product> getProduct(@PathVariable("id") int productId) {
-        LOG.info("GET /products?id=" + productId);
+    @RequestMapping(value="/product", method=RequestMethod.GET)
+    public ResponseEntity<List<Product>> getProduct(@RequestParam("id") String productId) {
+        LOG.info("GET /product?id=" + productId);
         //int id = Integer.parseInt(productId, 0);
-        Product product = productDAO.getProduct(productId);
+        List<Product> product = productDAO.getProduct(productId);
         if (product != null)
-            return new ResponseEntity<Product>(product,HttpStatus.OK);
+            return new ResponseEntity<List<Product>>(product,HttpStatus.OK);
         else
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

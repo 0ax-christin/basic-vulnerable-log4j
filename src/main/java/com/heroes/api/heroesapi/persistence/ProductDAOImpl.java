@@ -16,14 +16,14 @@ public class ProductDAOImpl implements ProductDAO {
     JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<Product> getAllProducts() {
+    public List<Product> getProducts() {
         return jdbcTemplate.query("SELECT * FROM Products", new BeanPropertyRowMapper<Product>(Product.class));
     }
 
     @Override
-    public Product getProduct(int productId) {
-        String sql = "SELECT * FROM Products WHERE ProductID = " + productId;
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<Product>(Product.class));
+    public List<Product> getProduct(String productId) {
+        String sql = "SELECT * FROM Products WHERE ProductID = " + productId + ";";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<Product>(Product.class));
     }
 
 }
